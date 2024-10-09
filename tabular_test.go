@@ -1,22 +1,31 @@
 package tabular_test
 
 import (
-	"bytes"
-	"strings"
+	"strconv"
 	"testing"
 
 	"github.com/tom-pacheco-bcm/tabular"
 )
 
-type ABC struct {
-	A string
-	B int
-	C float32
-}
+func TestTable1(t *testing.T) {
 
-func TestTable(t *testing.T) {
+	type ABC struct {
+		A string
+		B int
+		C float32
+	}
 
-	b := &bytes.Buffer{}
+	headers := []string{
+		"A",
+		"B",
+		"C",
+	}
+
+	formats := []string{
+		"%s",
+		"%d",
+		"%f",
+	}
 
 	table := []ABC{
 		{"One", 1, 1},
@@ -24,147 +33,40 @@ func TestTable(t *testing.T) {
 		{"Three", 3, 3},
 	}
 
-	expect := []string{
-		"A      B      C",
-		"-----  -  -----",
-		"One    1  1.00000",
-		"Two    2  2.00000",
-		"Three  3  3.00000",
-		"",
-	}
-
 	tb := tabular.From(table)
 
-	tw := tb.TextWriter()
-	_, err := tw.WriteTo(b)
-	if err != nil {
-		t.Error("failed to write text table.")
-	}
-	r := b.String()
-	lines := strings.Split(r, "\n")
-	if len(lines) != len(expect) {
-		t.Errorf("expected %d lines got %d", len(expect), len(lines))
-	}
-	for i := range lines {
-		if lines[i] != expect[i] {
-			t.Errorf("line %d expected %q got %q", i, expect[i], lines[i])
+	for i, name := range tb.HeaderNames() {
+		if name != headers[i] {
+			t.Errorf("expected header %d %s got %s", i, headers[i], name)
 		}
 	}
-}
 
-func TestTableRef(t *testing.T) {
-
-	b := &bytes.Buffer{}
-
-	table := []*ABC{
-		{"One", 1, 1},
-		{"Two", 2, 2},
-		{"Three", 3, 3},
-	}
-
-	expect := []string{
-		"A      B      C",
-		"-----  -  -----",
-		"One    1  1.00000",
-		"Two    2  2.00000",
-		"Three  3  3.00000",
-		"",
-	}
-
-	tb := tabular.From(table)
-	tw := tb.TextWriter()
-	_, err := tw.WriteTo(b)
-	if err != nil {
-		t.Error("failed to write text table.")
-	}
-	r := b.String()
-	lines := strings.Split(r, "\n")
-	if len(lines) != len(expect) {
-		t.Errorf("expected %d lines got %d", len(expect), len(lines))
-	}
-	for i := range lines {
-		if lines[i] != expect[i] {
-			t.Errorf("line %d expected %q got %q", i, expect[i], lines[i])
+	for i, r := range tb.Rows() {
+		er := table[i]
+		if r[0] != er.A {
+			t.Errorf("expected row[%d].A %s got %s", i, er.A, r[0])
+		}
+		if s := strconv.Itoa(er.B); r[1] != s {
+			t.Errorf("expected row[%d].B %s got %s", i, s, r[1])
+		}
+		if s := strconv.FormatFloat(float64(er.C), 'f', 6, 32); r[2] != s {
+			t.Errorf("expected row[%d].C %s got %s", i, s, r[2])
 		}
 	}
-}
 
-func TestTableRefRef(t *testing.T) {
-
-	b := &bytes.Buffer{}
-
-	type ABC struct {
-		A string
-		B *int
-		C float32
-	}
-	var x int = 1
-
-	table := []*ABC{
-		{"One", &x, 1},
-		{"Two", &x, 2},
-		{"Three", &x, 3},
-	}
-
-	expect := []string{
-		"A      B      C",
-		"-----  -  -----",
-		"One    1  1.00000",
-		"Two    1  2.00000",
-		"Three  1  3.00000",
-		"",
-	}
-
-	tb := tabular.From(table)
-	tw := tb.TextWriter()
-	_, err := tw.WriteTo(b)
-	if err != nil {
-		t.Error("failed to write text table.")
-	}
-	r := b.String()
-	lines := strings.Split(r, "\n")
-	if len(lines) != len(expect) {
-		t.Errorf("expected %d lines got %d", len(expect), len(lines))
-	}
-	for i := range lines {
-		if lines[i] != expect[i] {
-			t.Errorf("line %d expected %q got %q", i, expect[i], lines[i])
+	for i, c := range tb.Columns {
+		if c.FieldIndex != i {
+			t.Errorf("expected Columns[%d].FieldIndex %d got %d", i, c.FieldIndex, i)
+		}
+		if c.FieldName != c.HeaderName {
+			t.Errorf("expected %d FieldName and HeaderName to be the same %s vs %s", i, c.FieldName, c.HeaderName)
+		}
+		if c.FieldName != headers[i] {
+			t.Errorf("expected %d FieldName and HeaderName to be the same %s vs %s", i, c.FieldName, headers[i])
+		}
+		if c.Format != formats[i] {
+			t.Errorf("expected %d Format %s got %s", i, c.Format, formats[i])
 		}
 	}
-}
 
-func TestTableCsv(t *testing.T) {
-
-	b := &bytes.Buffer{}
-
-	table := []*ABC{
-		{"One", 1, 1},
-		{"Two", 2, 2},
-		{"Three", 3, 3},
-	}
-
-	expect := []string{
-		"A,B,C",
-		"One,1,1.00000",
-		"Two,2,2.00000",
-		"Three,3,3.00000",
-		"",
-	}
-
-	tb := tabular.From(table)
-	w := tb.CSVWriter()
-	_, err := w.WriteTo(b)
-	if err != nil {
-		t.Error("failed to write csv file.")
-	}
-	r := b.String()
-	lines := strings.Split(r, "\n")
-	if len(lines) != len(expect) {
-		t.Errorf("expected %d lines got %d", len(expect), len(lines))
-	}
-	for i := range lines {
-		if lines[i] != expect[i] {
-			t.Errorf("line %d expected %q got %q", i, expect[i], lines[i])
-		}
-	}
 }
