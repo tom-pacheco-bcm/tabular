@@ -1,6 +1,39 @@
-// tabular is a simple table formatting utility.
+// tabular is a simple table generation and formatting utility.
 //
-// Tabular reads a slice and can generate a table in text or CSV
+// Tabular reads a slice and can generate a table based on the public
+// properties of the data type. It can then generate text or CSV
+// output.
+//
+// # Example
+//
+// func main() {
+// 	dirList, err := os.ReadDir("/")
+// 	if err != nil {
+// 		os.Exit(1)
+// 	}
+//
+// 	dirs := make([]struct {
+// 		Name  string
+// 		IsDir bool
+// 	}, len(dirList))
+//
+// 	for i, d := range dirList {
+// 		dirs[i].Name = d.Name()
+// 		dirs[i].IsDir = d.IsDir()
+// 	}
+//
+// 	dt := tabular.From(dirs)
+// 	w := dt.TextWriter()
+// 	w.WriteTo(os.Stdout)
+// }
+//
+// _results_
+//
+// Name                          IsDir
+// ----------------------------  -----
+// $RECYCLE.BIN                   true
+// Data                           true
+// README                        false
 //
 
 package tabular
@@ -120,7 +153,7 @@ func (tbl *Table[T]) Rows() [][]string {
 	n := len(tbl.Columns)
 	values := reflect.ValueOf(tbl.data)
 	table := make([][]string, 0, len(tbl.data))
-	for i := range tbl.Columns {
+	for i := range tbl.data {
 		row := make([]string, n)
 		table = append(table, row)
 		v := values.Index(i)

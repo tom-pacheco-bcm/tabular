@@ -30,10 +30,6 @@ func (tt *Text[T]) WriteTo(dst io.Writer) (int64, error) {
 
 	tt.autoWidth(table)
 
-	for i := range tt.Columns {
-		formats[i] = fmt.Sprintf("%%-%ds", tt.Columns[i].Width)
-	}
-
 	// right justify all numeric types
 	// everything else is left justified
 	for i := range tt.Columns {
@@ -41,8 +37,10 @@ func (tt *Text[T]) WriteTo(dst io.Writer) (int64, error) {
 		case reflect.Bool, reflect.Int, reflect.Int8, reflect.Int16, reflect.Int64, reflect.Int32,
 			reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint64, reflect.Uint32, reflect.Float32, reflect.Float64:
 			tt.Columns[i].HeaderFormat = fmt.Sprintf("%%%ds", tt.Columns[i].Width)
+			formats[i] = fmt.Sprintf("%%%ds", tt.Columns[i].Width)
 		default:
 			tt.Columns[i].HeaderFormat = fmt.Sprintf("%%-%ds", tt.Columns[i].Width)
+			formats[i] = fmt.Sprintf("%%-%ds", tt.Columns[i].Width)
 		}
 	}
 
