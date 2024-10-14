@@ -1,41 +1,38 @@
 // tabular is a simple table generation and formatting utility.
 //
-// Tabular reads a slice and can generate a table based on the public
-// properties of the data type. It can then generate text or CSV
-// output.
+// Tabular reads a slice and can generate a table based on the public properties
+// of the data type. It can then generate text or CSV output.
 //
 // # Example
 //
-// func main() {
-// 	dirList, err := os.ReadDir("/")
-// 	if err != nil {
-// 		os.Exit(1)
-// 	}
+//	func main() {
+//	    dirList, err := os.ReadDir("/")
+//	    if err != nil {
+//	        os.Exit(1)
+//	    }
 //
-// 	dirs := make([]struct {
-// 		Name  string
-// 		IsDir bool
-// 	}, len(dirList))
+//	    dirs := make([]struct {
+//	        Name    string
+//	        IsDir bool
+//	    }, len(dirList))
 //
-// 	for i, d := range dirList {
-// 		dirs[i].Name = d.Name()
-// 		dirs[i].IsDir = d.IsDir()
-// 	}
+//	    for i, d := range dirList {
+//	        dirs[i].Name = d.Name()
+//	        dirs[i].IsDir = d.IsDir()
+//	    }
 //
-// 	dt := tabular.From(dirs)
-// 	w := dt.TextWriter()
-// 	w.WriteTo(os.Stdout)
-// }
+//	    dt := tabular.From(dirs)
+//	    w := dt.TextWriter()
+//	    w.WriteTo(os.Stdout)
+//	}
 //
-// _results_
+// output:
 //
-// Name                          IsDir
-// ----------------------------  -----
-// $RECYCLE.BIN                   true
-// Data                           true
-// README                        false
-//
-
+//	Name                          IsDir
+//	----------------------------  -----
+//	$RECYCLE.BIN                   true
+//	Data                           true
+//	README                        false
 package tabular
 
 import (

@@ -1,9 +1,14 @@
 # tabular
 
-tabular is a simple text table output module
+Tabular is a module for simple table outputs with options for csv or plain text.
 
+## Usage
 
-## Example
+Download the package:
+
+	go get github.com/tom-pacheco-bcm/tabular
+
+### Example
 
 ```go
 package main
@@ -38,7 +43,7 @@ func main() {
 }
 ```
 
-_results_
+_output:_
 ```
 Name                          IsDir
 ----------------------------  -----
