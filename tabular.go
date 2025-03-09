@@ -1,7 +1,7 @@
 // tabular is a simple table generation and formatting utility.
 //
 // Tabular reads a slice and can generate a table based on the public properties
-// of the data type. It can then generate text or CSV output.
+// of the data type. It can then generate text, CSV, or xlsx outputs.
 //
 // # Example
 //

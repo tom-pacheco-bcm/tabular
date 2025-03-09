@@ -1,6 +1,6 @@
 # tabular
 
-Tabular is a module for simple table outputs with options for csv or plain text.
+Tabular is a module for simple table outputs with options for plain text, csv, and xlsx.
 
 ## Usage
 
