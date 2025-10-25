@@ -87,8 +87,11 @@ func (tt *Text[T]) WriteTo(dst io.Writer) (int64, error) {
 	}
 
 	// the data table
-
-	for _, row := range table {
+	n := len(table)
+	if tt.Footer {
+		n--
+	}
+	for _, row := range table[:n] {
 		for i := range tt.Columns {
 			if i > 0 {
 				_, err = fmt.Fprint(b, "  ")
@@ -102,6 +105,43 @@ func (tt *Text[T]) WriteTo(dst io.Writer) (int64, error) {
 			}
 		}
 		_, err = fmt.Fprintln(b)
+		if err != nil {
+			return 0, err
+		}
+	}
+
+	if tt.Footer {
+		// header separator row
+		for i := range tt.Columns {
+			if i > 0 {
+				_, err = fmt.Fprint(b, "  ")
+				if err != nil {
+					return 0, err
+				}
+			}
+			_, err = fmt.Fprint(b, strings.Repeat("-", tt.Columns[i].Width))
+			if err != nil {
+				return 0, err
+			}
+		}
+		_, err = fmt.Fprint(b, "\n")
+		if err != nil {
+			return 0, err
+		}
+		row := table[n]
+		for i := range tt.Columns {
+			if i > 0 {
+				_, err = fmt.Fprint(b, "  ")
+				if err != nil {
+					return 0, err
+				}
+			}
+			_, err = fmt.Fprintf(b, formats[i], row[i])
+			if err != nil {
+				return 0, err
+			}
+		}
+		_, err = fmt.Fprint(b, "\n")
 		if err != nil {
 			return 0, err
 		}

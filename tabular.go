@@ -60,6 +60,7 @@ func (c *Column) Header() string {
 type Table[T any] struct {
 	Columns []Column
 	data    []T
+	Footer  bool
 }
 
 // From creates a table from a array of some data type
