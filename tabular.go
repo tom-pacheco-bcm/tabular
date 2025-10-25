@@ -49,6 +49,7 @@ type Column struct {
 	HeaderFormat string
 	Format       string
 	Width        int
+	Hidden       bool
 }
 
 func (c *Column) Header() string {
@@ -138,26 +139,39 @@ func getFormat(t reflect.Type) string {
 }
 
 func (tbl *Table[T]) HeaderNames() []string {
-	row := make([]string, len(tbl.Columns))
-	for i := range tbl.Columns {
-		row[i] = tbl.Columns[i].HeaderName
+	cols := tbl.visibleColumns()
+	row := make([]string, len(cols))
+	for i := range cols {
+		row[i] = cols[i].HeaderName
 	}
 	return row
 }
 
+func (tbl *Table[T]) visibleColumns() []Column {
+	cols := make([]Column, 0, len(tbl.Columns))
+	for i := range tbl.Columns {
+		if tbl.Columns[i].Hidden {
+			continue
+		}
+		cols = append(cols, tbl.Columns[i])
+	}
+	return cols
+}
+
 // Rows generates a string table from the typed array data
 func (tbl *Table[T]) Rows() [][]string {
-	n := len(tbl.Columns)
 	values := reflect.ValueOf(tbl.data)
+	cols := tbl.visibleColumns()
+	colCount := len(cols)
 	table := make([][]string, 0, len(tbl.data))
 	for i := range tbl.data {
-		row := make([]string, n)
+		row := make([]string, colCount)
 		table = append(table, row)
 		v := values.Index(i)
 		if v.Kind() == reflect.Pointer {
 			v = v.Elem()
 		}
-		for j, col := range tbl.Columns {
+		for j, col := range cols {
 			f := v.Field(col.FieldIndex)
 			if f.Kind() == reflect.Pointer {
 				f = f.Elem()
