@@ -1,6 +1,6 @@
 module github.com/tom-pacheco-bcm/tabular
 
-go 1.23
+go 1.24
 
 require github.com/xuri/excelize/v2 v2.9.0
 
