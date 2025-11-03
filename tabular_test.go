@@ -24,7 +24,7 @@ func TestTable1(t *testing.T) {
 	formats := []string{
 		"%s",
 		"%d",
-		"%f",
+		tabular.FloatFormat,
 	}
 
 	table := []ABC{
@@ -49,7 +49,7 @@ func TestTable1(t *testing.T) {
 		if s := strconv.Itoa(er.B); r[1] != s {
 			t.Errorf("expected row[%d].B %s got %s", i, s, r[1])
 		}
-		if s := strconv.FormatFloat(float64(er.C), 'f', 6, 32); r[2] != s {
+		if s := strconv.FormatFloat(float64(er.C), 'f', 3, 32); r[2] != s {
 			t.Errorf("expected row[%d].C %s got %s", i, s, r[2])
 		}
 	}
@@ -104,8 +104,8 @@ func TestTableWithHiddenCols(t *testing.T) {
 		if r[0] != er.A {
 			t.Errorf("expected row[%d].A %s got %s", i, er.A, r[0])
 		}
-		if s := strconv.FormatFloat(float64(er.C), 'f', 6, 32); r[1] != s {
-			t.Errorf("expected row[%d].C %s got %s", i, s, r[2])
+		if s := strconv.FormatFloat(float64(er.C), 'f', 3, 32); r[1] != s {
+			t.Errorf("expected row[%d].C %s got %s", i, s, r[1])
 		}
 	}
 }

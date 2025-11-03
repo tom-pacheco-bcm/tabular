@@ -12,7 +12,7 @@ type XLSX[T any] struct {
 	Table[T]
 }
 
-// CSVWriter returns a writer that writes CSV formatted data
+// XLSXWriter returns a writer that writes CSV formatted data
 func (tbl *Table[T]) XLSXWriter() *XLSX[T] {
 	return &XLSX[T]{*tbl}
 }

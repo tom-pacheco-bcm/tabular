@@ -25,11 +25,11 @@ func TestTable(t *testing.T) {
 	}
 
 	expect := []string{
-		"A      B         C",
-		"-----  -  --------",
-		"One    1  1.000000",
-		"Two    2  2.000000",
-		"Three  3  3.000000",
+		"A      B      C",
+		"-----  -  -----",
+		"One    1  1.000",
+		"Two    2  2.000",
+		"Three  3  3.000",
 		"",
 	}
 
@@ -69,11 +69,11 @@ func TestTableRef(t *testing.T) {
 	}
 
 	expect := []string{
-		"A      B         C",
-		"-----  -  --------",
-		"One    1  1.000000",
-		"Two    2  2.000000",
-		"Three  3  3.000000",
+		"A      B      C",
+		"-----  -  -----",
+		"One    1  1.000",
+		"Two    2  2.000",
+		"Three  3  3.000",
 		"",
 	}
 
@@ -113,11 +113,11 @@ func TestTableRefRef(t *testing.T) {
 	}
 
 	expect := []string{
-		"A      B         C",
-		"-----  -  --------",
-		"One    1  1.000000",
-		"Two    1  2.000000",
-		"Three  1  3.000000",
+		"A      B      C",
+		"-----  -  -----",
+		"One    1  1.000",
+		"Two    1  2.000",
+		"Three  1  3.000",
 		"",
 	}
 

@@ -21,9 +21,9 @@ func TestTableXlsx(t *testing.T) {
 
 	expect := [][]string{
 		{"A", "B", "C"},
-		{"One", "1", "1.000000"},
-		{"Two", "2", "2.000000"},
-		{"Three", "3", "3.000000"},
+		{"One", "1", "1.000"},
+		{"Two", "2", "2.000"},
+		{"Three", "3", "3.000"},
 	}
 
 	testFile := "./test.xlsx"

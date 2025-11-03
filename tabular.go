@@ -40,6 +40,9 @@ import (
 	"reflect"
 )
 
+// FloatFormat represents the default formatting for Float32 and Float64 fields
+var FloatFormat = "%0.3f"
+
 // Column represents a table column
 type Column struct {
 	FieldIndex   int
@@ -133,7 +136,7 @@ func getFormat(t reflect.Type) string {
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint64, reflect.Uint32:
 		return "%d"
 	case reflect.Float32, reflect.Float64:
-		return "%f"
+		return FloatFormat
 	default:
 		return "%v"
 	}
